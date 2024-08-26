@@ -15,17 +15,20 @@ RUN npm install --silent
 
 # add app
 COPY . ./
+RUN npm run build
+
 FROM nginx:alpine
-COPY --from=build /usr/src/app/build /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/nginx.conf
+# Copy built files from build stage to Nginx html directory
+COPY --from=build /frontend/build /usr/share/nginx/html
+
 
 EXPOSE 3000
 EXPOSE 80
 
 
 
-# start app
-CMD ["npm", "start"]
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
 
 
 
